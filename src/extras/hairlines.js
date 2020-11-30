@@ -10,7 +10,7 @@
  */
 
 /*global Dygraph:false */
-
+import Dygraph from '../../index.es5'
 Dygraph.Plugins.Hairlines = (function() {
 
 "use strict";
@@ -54,7 +54,7 @@ hairlines.prototype.activate = function(g) {
 
   return {
     didDrawChart: this.didDrawChart,
-    click: this.click,
+    // click: this.click,
     dblclick: this.dblclick,
     dataDidUpdate: this.dataDidUpdate
   };
@@ -113,15 +113,15 @@ hairlines.prototype.createHairline = function(props) {
     })
     .show();
 
-  // Surely there's a more jQuery-ish way to do this!
-  $([$infoDiv.get(0), $lineContainerDiv.get(0)])
-    .draggable({
-      'axis': 'x',
-      'drag': function(event, ui) {
-        self.hairlineWasDragged(h, event, ui);
-      }
-      // TODO(danvk): set cursor here
-    });
+  // // Surely there's a more jQuery-ish way to do this!
+  // $([$infoDiv.get(0), $lineContainerDiv.get(0)])
+  //   .draggable({
+  //     'axis': 'x',
+  //     'drag': function(event, ui) {
+  //       self.hairlineWasDragged(h, event, ui);
+  //     }
+  //     // TODO(danvk): set cursor here
+  //   });
 
   h = $.extend({
     interpolated: true,
@@ -178,7 +178,7 @@ hairlines.prototype.updateHairlineDivPositions = function() {
     $(h.infoDiv).css({
       'left': left + 'px',
       'top': layout.y + 'px',
-    }).draggable("option", "containment", box);
+    })  //.draggable("option", "containment", box);
 
     var visible = (left >= chartLeft && left <= chartRight);
     $([h.infoDiv, h.lineDiv]).toggle(visible);
@@ -334,31 +334,31 @@ hairlines.prototype.dataDidUpdate = function(e) {
   });
 };
 
-hairlines.prototype.click = function(e) {
-  if (this.addTimer_) {
-    // Another click is in progress; ignore this one.
-    return;
-  }
+// hairlines.prototype.click = function(e) {
+//   if (this.addTimer_) {
+//     // Another click is in progress; ignore this one.
+//     return;
+//   }
 
-  var area = e.dygraph.getArea();
-  var xval = this.dygraph_.toDataXCoord(e.canvasx);
+//   var area = e.dygraph.getArea();
+//   var xval = this.dygraph_.toDataXCoord(e.canvasx);
 
-  var that = this;
-  this.addTimer_ = setTimeout(function() {
-    that.addTimer_ = null;
-    that.hairlines_.push(that.createHairline({xval: xval}));
+//   var that = this;
+//   this.addTimer_ = setTimeout(function() {
+//     that.addTimer_ = null;
+//     that.hairlines_.push(that.createHairline({xval: xval}));
 
-    that.updateHairlineDivPositions();
-    that.updateHairlineInfo();
-    that.updateHairlineStyles();
-    that.attachHairlinesToChart_();
+//     that.updateHairlineDivPositions();
+//     that.updateHairlineInfo();
+//     that.updateHairlineStyles();
+//     that.attachHairlinesToChart_();
 
-    $(that).triggerHandler('hairlineCreated', {
-      xval: xval
-    });
-    $(that).triggerHandler('hairlinesChanged', {});
-  }, CLICK_DELAY_MS);
-};
+//     $(that).triggerHandler('hairlineCreated', {
+//       xval: xval
+//     });
+//     $(that).triggerHandler('hairlinesChanged', {});
+//   }, CLICK_DELAY_MS);
+// };
 
 hairlines.prototype.dblclick = function(e) {
   if (this.addTimer_) {
